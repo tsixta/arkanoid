@@ -1,0 +1,23 @@
+screen.size=(600,480)
+tiles=(11,16)
+background.color=(255,255,255)
+score.color=(0,0,0)
+board.length=2 # units are horizontal tiles
+board.color=(64,64,64)
+ball.radius=0.15 # units are horizontal tiles
+ball.color=(255,0,0) 
+ball.initial_speed=7 # units are horizontal tiles per second
+add_brick_type(1,(0,0,0),add_points(10),destroy())
+
+bricks:
+0,0,0,0,0,0,0,0,0,0,0
+1,0,1,0,1,0,1,0,1,0,1
+0,1,0,1,0,1,0,1,0,1,0
+1,0,1,0,1,0,1,0,1,0,1
+0,1,0,1,0,1,0,1,0,1,0
+0,0,0,0,0,1,0,0,0,0,0
+0,0,0,0,1,1,1,0,0,0,0
+0,0,0,1,1,1,1,1,0,0,0
+0,0,1,1,1,1,1,1,1,0,0
+0,1,1,1,1,1,1,1,1,1,0
+1,1,1,1,1,1,1,1,1,1,1
