@@ -1,7 +1,7 @@
-from enum import Enum
+#from enum import Enum
 
 
-class CommandTypes(Enum):
+class CommandTypes():
     noop = 0
     destroy = 1
     change_brick_type = 2
@@ -20,7 +20,7 @@ class Command:
         self.timestamp = timestamp
 
     def __str__(self):
-        return 'c[type='+str(self.type.value)+', parameters='+str(self.parameters)+', timestamp='+str(self.timestamp)+']'
+        return 'c[type='+str(self.type)+', parameters='+str(self.parameters)+', timestamp='+str(self.timestamp)+']'
 
     def __repr__(self):
         return self.__str__()
@@ -61,32 +61,32 @@ def preprocess_brick_type(arguments):
         pos, end_pos = nail_down_command(ret, 'noop')
         if pos >= 0 and end_pos >= 0:
             needle = ret[pos:end_pos+1]
-            ret = ret.replace(needle, '['+str(int(CommandTypes.noop.value))+',')
+            ret = ret.replace(needle, '['+str(int(CommandTypes.noop))+',')
             command_replaced = True
         pos, end_pos = nail_down_command(ret, 'destroy')
         if pos >= 0 and end_pos >= 0:
             needle = ret[pos:end_pos + 1]
-            ret = ret.replace(needle, '['+str(int(CommandTypes.destroy.value))+',')
+            ret = ret.replace(needle, '['+str(int(CommandTypes.destroy))+',')
             command_replaced = True
         pos, end_pos = nail_down_command(ret, 'change_type')
         if pos >= 0 and end_pos >= 0:
             needle = ret[pos:end_pos + 1]
-            ret = ret.replace(needle, '['+str(int(CommandTypes.change_brick_type.value))+',')
+            ret = ret.replace(needle, '['+str(int(CommandTypes.change_brick_type))+',')
             command_replaced = True
         pos, end_pos = nail_down_command(ret, 'delay')
         if pos >= 0 and end_pos >= 0:
             needle = ret[pos:end_pos + 1]
-            ret = ret.replace(needle, '['+str(int(CommandTypes.delay.value))+',')
+            ret = ret.replace(needle, '['+str(int(CommandTypes.delay))+',')
             command_replaced = True
         pos, end_pos = nail_down_command(ret, 'hit')
         if pos >= 0 and end_pos >= 0:
             needle = ret[pos:end_pos + 1]
-            ret = ret.replace(needle, '['+str(int(CommandTypes.hit_brick.value))+',')
+            ret = ret.replace(needle, '['+str(int(CommandTypes.hit_brick))+',')
             command_replaced = True
         pos, end_pos = nail_down_command(ret, 'add_points')
         if pos >= 0 and end_pos >= 0:
             needle = ret[pos:end_pos + 1]
-            ret = ret.replace(needle, '[' + str(int(CommandTypes.add_points.value)) + ',')
+            ret = ret.replace(needle, '[' + str(int(CommandTypes.add_points)) + ',')
             command_replaced = True
     return ret
 

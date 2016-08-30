@@ -1,9 +1,9 @@
 from math import sqrt, fabs, pi, acos
 import numpy as np
-from enum import Enum
+#from enum import Enum
 
 
-class HitObject(Enum):
+class HitObject():
     nothing = 0
     wall = 1
     board = 2

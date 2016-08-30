@@ -7,10 +7,10 @@ from bricks import Brick, BrickType
 from commands import *
 import ast
 from random import random
-from enum import Enum
+#from enum import Enum
 
 
-class EventType(Enum):
+class EventType():
     ball = set([0])
 
 
@@ -100,25 +100,25 @@ class Level:
                         for c in arguments[2:]:
                             execute_if_events = set([0])
                             generate_events = set([0])
-                            if c[0] == int(CommandTypes.add_points.value): #destroy(execute_if_events=0)
+                            if c[0] == int(CommandTypes.add_points): #destroy(execute_if_events=0)
                                 if len(c) > 2:
                                     execute_if_events = convert_to_set(c[2])
                                 self.brick_types[bid].hit_commands.extend([(CommandTypes.add_points, [c[1], execute_if_events])])
-                            if c[0] == int(CommandTypes.destroy.value): #destroy(execute_if_events=0)
+                            if c[0] == int(CommandTypes.destroy): #destroy(execute_if_events=0)
                                 if len(c) > 1:
                                     execute_if_events = convert_to_set(c[1])
                                 self.brick_types[bid].hit_commands.extend([(CommandTypes.destroy, [execute_if_events])])
                                 self.brick_types[bid].can_be_destroyed = True
-                            if c[0] == int(CommandTypes.change_brick_type.value): #change_type(new_type, execute_if_events=0)
+                            if c[0] == int(CommandTypes.change_brick_type): #change_type(new_type, execute_if_events=0)
                                 if len(c) > 2:
                                     execute_if_events = convert_to_set(c[2])
                                 self.brick_types[bid].hit_commands.extend([(CommandTypes.change_brick_type, [c[1], execute_if_events])])
                                 self.brick_types[bid].can_be_destroyed = True
-                            if c[0] == int(CommandTypes.delay.value): #delay(milliseconds, execute_if_events=0)
+                            if c[0] == int(CommandTypes.delay): #delay(milliseconds, execute_if_events=0)
                                 if len(c) > 2:
                                     execute_if_events = convert_to_set(c[2])
                                 self.brick_types[bid].hit_commands.extend([(CommandTypes.delay, [c[1], execute_if_events])])
-                            if c[0] == int(CommandTypes.hit_brick.value): #hit(dx, dy, execute_if_events=0, execute_if_events=0)
+                            if c[0] == int(CommandTypes.hit_brick): #hit(dx, dy, execute_if_events=0, execute_if_events=0)
                                 if len(c) > 3:
                                     execute_if_events = convert_to_set(c[3])
                                 if len(c) > 4:
@@ -295,7 +295,7 @@ class Level:
                 self.player_defeated()
             start_t = cp.t
             if cp.hit_object == HitObject.brick:
-                self.__process_brick_hit_commands(cp.brick_tx, cp.brick_ty, self.total_elapsed_time_seconds + cp.t, EventType.ball.value)
+                self.__process_brick_hit_commands(cp.brick_tx, cp.brick_ty, self.total_elapsed_time_seconds + cp.t, EventType.ball)
             elif cp.hit_object == HitObject.board:
                 self.board.bonus -= 1
                 if self.board.bonus > 0:
