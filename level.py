@@ -118,12 +118,12 @@ class Level:
                                 if len(c) > 2:
                                     execute_if_events = convert_to_set(c[2])
                                 self.brick_types[bid].hit_commands.extend([(CommandTypes.delay, [c[1], execute_if_events])])
-                            if c[0] == int(CommandTypes.hit_brick): #hit(dx, dy, execute_if_events=0, execute_if_events=0)
+                            if c[0] == int(CommandTypes.hit_brick): #hit(dx, dy, execute_if_events=0, generate_events=0)
                                 if len(c) > 3:
-                                    execute_if_events = convert_to_set(c[3])
+                                    generate_events = convert_to_set(c[3])
                                 if len(c) > 4:
-                                    generate_events = convert_to_set(c[4])
-                                self.brick_types[bid].hit_commands.extend([(CommandTypes.hit_brick, [c[1], c[2], execute_if_events, generate_events])])
+                                    execute_if_events = convert_to_set(c[4])
+                                self.brick_types[bid].hit_commands.extend([(CommandTypes.hit_brick, [c[1], c[2], generate_events, execute_if_events])])
                     if command == 'bricks':
                         self.bricks = [[Brick(0, self.tile_to_pixels_rectangle([x, y])) for y in range(self.tiles[1])]
                                        for x in range(self.tiles[0])]
@@ -325,11 +325,7 @@ class Level:
         self.bricks[tx][ty].redraw = True
         if self.bricks[tx][ty].type != 0:
             for command, parameters in self.brick_types[self.bricks[tx][ty].type].hit_commands:
-                if command == CommandTypes.hit_brick:
-                    proceed = len(parameters[-2] & events) > 0
-                else:
-                    proceed = len(parameters[-1] & events) > 0
-                if proceed:
+                if len(parameters[-1] & events) > 0:
                     if command == CommandTypes.add_points:
                         if execution_time > time:
                             self.command_queue.append(Command(CommandTypes.add_points, [parameters[0] + self.board.bonus], execution_time))
@@ -350,9 +346,9 @@ class Level:
                         target_ty = parameters[1] + ty
                         if 0 <= target_tx < self.tiles[0] and 0 <= target_ty < self.tiles[1] and self.bricks[target_tx][target_ty].type != 0:
                             if execution_time > time:
-                                self.command_queue.append(Command(CommandTypes.hit_brick, [target_tx, target_ty, parameters[-1]], execution_time))
+                                self.command_queue.append(Command(CommandTypes.hit_brick, [target_tx, target_ty, parameters[-2]], execution_time))
                             else:
-                                self.__process_brick_hit_commands(target_tx, target_ty, execution_time, parameters[-1])
+                                self.__process_brick_hit_commands(target_tx, target_ty, execution_time, parameters[-2])
                     elif command == CommandTypes.delay:
                         execution_time += parameters[0] / 1000.0
                     elif command == CommandTypes.noop:
@@ -368,7 +364,7 @@ class Level:
             if self.bricks[parameters[0]][parameters[1]].type == 0:
                 self.bricks[parameters[0]][parameters[1]].can_be_destroyed = False
         elif command == CommandTypes.hit_brick and self.bricks[parameters[0]][parameters[1]].type != 0:
-            self.__process_brick_hit_commands(parameters[0], parameters[1], time, parameters[2])
+            self.__process_brick_hit_commands(parameters[0], parameters[1], time, parameters[-1])
             self.bricks[parameters[0]][parameters[1]].redraw = True
         elif command == CommandTypes.add_points:
             self.score += parameters[0]
