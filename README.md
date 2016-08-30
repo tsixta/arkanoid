@@ -2,6 +2,12 @@
 
 Python implementation of classic game Arkanoid.
 
+# Configurations known to work
+
+* Python 2.7.6
+* pygame 1.9.1
+* numpy 1.8.2
+
 # Usage
 
 To start the game run
