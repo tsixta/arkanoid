@@ -100,10 +100,14 @@ class Level:
                         for c in arguments[2:]:
                             execute_if_events = set([0])
                             generate_events = set([0])
-                            if c[0] == int(CommandTypes.add_points): #destroy(execute_if_events=0)
+                            if c[0] == int(CommandTypes.add_points): #add_points(n, execute_if_events=0)
                                 if len(c) > 2:
                                     execute_if_events = convert_to_set(c[2])
                                 self.brick_types[bid].hit_commands.extend([(CommandTypes.add_points, [c[1], execute_if_events])])
+                            if c[0] == int(CommandTypes.add_to_bonus): #add_to_bonus(n, execute_if_events=0)
+                                if len(c) > 2:
+                                    execute_if_events = convert_to_set(c[2])
+                                self.brick_types[bid].hit_commands.extend([(CommandTypes.add_to_bonus, [c[1], execute_if_events])])
                             if c[0] == int(CommandTypes.destroy): #destroy(execute_if_events=0)
                                 if len(c) > 1:
                                     execute_if_events = convert_to_set(c[1])
@@ -201,7 +205,7 @@ class Level:
 
     def __draw_score(self, game, screen):
         font = game.font.Font(None, 36)
-        text = font.render(str(self.score), 1, self.score_color)
+        text = font.render(str(int(round(self.score))), 1, self.score_color)
         textpos = text.get_rect()
         ret = [[self.screen_size[0]-textpos[2], 0, textpos[2], textpos[3]]]
         screen.blit(text, (ret[0][0], ret[0][1]))
@@ -263,6 +267,7 @@ class Level:
 
 
     def __move_ball(self, game, screen, elapsed_time):
+        #print self.board.bonus
         ret = [self.ball.last_drawn_rectangle]
         self.__set_bricks_around_ball_to_redraw()
         #  resolve collisions
@@ -331,6 +336,11 @@ class Level:
                             self.command_queue.append(Command(CommandTypes.add_points, [parameters[0] + self.board.bonus], execution_time))
                         else:
                             self.__eval_command(CommandTypes.add_points, [parameters[0] + self.board.bonus], execution_time)
+                    elif command == CommandTypes.add_to_bonus:
+                        if execution_time > time:
+                            self.command_queue.append(Command(CommandTypes.add_to_bonus, [parameters[0]], execution_time))
+                        else:
+                            self.__eval_command(CommandTypes.add_to_bonus, [parameters[0]], execution_time)
                     elif command == CommandTypes.destroy:
                         if execution_time > time:
                             self.command_queue.append(Command(CommandTypes.change_brick_type, [tx, ty, 0], execution_time))
@@ -358,6 +368,7 @@ class Level:
 
     def __eval_command(self, command, parameters, time):
         if command == CommandTypes.change_brick_type and self.bricks[parameters[0]][parameters[1]].type != 0:
+            
             self.board.bonus += 1
             self.bricks[parameters[0]][parameters[1]].type = parameters[2]
             self.bricks[parameters[0]][parameters[1]].redraw = True
@@ -368,6 +379,8 @@ class Level:
             self.bricks[parameters[0]][parameters[1]].redraw = True
         elif command == CommandTypes.add_points:
             self.score += parameters[0]
+        elif command == CommandTypes.add_to_bonus:
+            self.board.bonus += parameters[0]
         return True
 
     def __collisions_brick(self, cp, position_px, radius_px, a, start_t, tx, ty):

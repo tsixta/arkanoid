@@ -8,6 +8,7 @@ class CommandTypes():
     delay = 3
     hit_brick = 4
     add_points = 5
+    add_to_bonus = 6
 
 class Command:
     type = CommandTypes.noop
@@ -87,6 +88,11 @@ def preprocess_brick_type(arguments):
         if pos >= 0 and end_pos >= 0:
             needle = ret[pos:end_pos + 1]
             ret = ret.replace(needle, '[' + str(int(CommandTypes.add_points)) + ',')
+            command_replaced = True
+        pos, end_pos = nail_down_command(ret, 'add_to_bonus')
+        if pos >= 0 and end_pos >= 0:
+            needle = ret[pos:end_pos + 1]
+            ret = ret.replace(needle, '[' + str(int(CommandTypes.add_to_bonus)) + ',')
             command_replaced = True
     return ret
 
