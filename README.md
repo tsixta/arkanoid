@@ -86,7 +86,7 @@ Each command is one of the following:
    * `add_points(n,execute_if_events=(0))`: Add n points to the score.
         * `n`: Number of points.
         * `execute_if_events`: (optional) List of hit types this command is conditioned on. If this parameter is missing, the default value is (0).
-   * `add_points(n,execute_if_events=(0))`: Add n points to the current score bonus.
+   * `add_to_bonus(n,execute_if_events=(0))`: Add n points to the current score bonus.
         * `n`: Number of points.
         * `execute_if_events`: (optional) List of hit types this command is conditioned on. If this parameter is missing, the default value is (0).
     * `delay(ms,execute_if_events=(0))`: Delay execution of the following commands by `ms` milliseconds.
